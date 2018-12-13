@@ -6,6 +6,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import ncs_product.dto.Product;
 import ncs_product.dto.Sale;
@@ -64,6 +66,49 @@ public class ProductUi extends JFrame implements ActionListener {
 		
 		JLabel lblName = new JLabel("제품명");
 		panel.add(lblName);
+		//번호 입력시 제품이름이 뜸
+				tfCode.getDocument().addDocumentListener(new DocumentListener() {
+					@Override
+					public void changedUpdate(DocumentEvent arg0) {
+						if(tfCode.getText().length()==4) {
+							Product pdt = new Product(tfCode.getText().trim());
+							try {
+								Product updatePdt =  service.searchProduct(pdt);
+								tfName.setText(updatePdt.getName());
+							} catch (SQLException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+
+					@Override
+					public void insertUpdate(DocumentEvent arg0) {
+						if(tfCode.getText().length()==4) {
+							Product pdt = new Product(tfCode.getText().trim());
+							try {
+								Product updatePdt =  service.searchProduct(pdt);
+								tfName.setText(updatePdt.getName());
+							} catch (SQLException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+
+					@Override
+					public void removeUpdate(DocumentEvent arg0) {
+						if(tfCode.getText().length()==4) {
+							Product pdt = new Product(tfCode.getText().trim());
+							try {
+								Product updatePdt =  service.searchProduct(pdt);
+								tfName.setText(updatePdt.getName());
+							} catch (SQLException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+					
+				});
+
 		
 		tfName = new JTextField();
 		panel.add(tfName);
