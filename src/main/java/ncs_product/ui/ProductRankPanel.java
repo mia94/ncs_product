@@ -11,7 +11,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
-import jdbc_study_coffee.dto.Sale;
+import ncs_product.dto.Sale;
+
 
 public class ProductRankPanel extends JPanel {
 	private JTable table;
