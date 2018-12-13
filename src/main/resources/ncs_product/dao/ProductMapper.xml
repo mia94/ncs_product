@@ -1,6 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ncs_product.dao.ProductMapper">
+
+	<select id="selectProductByNo" parameterType="Product" resultType="Product">
+		select stud_id as studid, name, email, dob, phone
+		from Product
+		where stud_id=#{studId}
+	</select>
 	
+	<select id="selectProductByAll" resultType="Product">
+		select stud_id as studid, name, email, dob, phone
+		from Product
+	</select>
+	
+	<insert id="insertProduct" parameterType="Product">
+		insert into Product(STUD_ID,NAME,EMAIL,PHONE,DOB)
+		value(#{studId},#{name},#{email},#{phone},#{dob})
+	</insert>
+	
+	<delete id="deleteProduct">
+		delete
+		from Product
+		where STUD_ID = #{studId}; <!-- int로 받기때문에 get메소드를 불러오지 못함 -->
+	</delete>
+	
+	<update id="updateProduct" parameterType="Product">
+		update Product
+		set	NAME = #{name}, EMAIL=#{email},PHONE=#{phone},DOB=#{dob}
+		where STUD_ID = #{studId}
+	</update>
 
 </mapper>
