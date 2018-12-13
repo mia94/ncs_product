@@ -6,41 +6,39 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import ncs_product.dto.Product;
+import ncs_product.dto.Sale;
+import ncs_product.service.ProductFrameService;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import java.awt.GridLayout;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.awt.event.ActionEvent;
 
-public class ProductUi extends JFrame {
+public class ProductUi extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
+	private JTextField tfCode;
+	private JTextField tfName;
+	private JTextField tfPrice;
+	private JTextField tfSaleCnt;
+	private JTextField tfMarginRate;
+	private JButton btnOutput1;
+	private JButton btnOutput2;
+	private JButton btnInput;
+	private ProductFrameService service;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ProductUi frame = new ProductUi();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
 	 */
 	public ProductUi() {
+		service = new ProductFrameService();
 		initComponents();
 	}
 	private void initComponents() {
@@ -56,28 +54,28 @@ public class ProductUi extends JFrame {
 		contentPane.add(panel, BorderLayout.CENTER);
 		panel.setLayout(new GridLayout(0, 4, 0, 0));
 		
-		JLabel lblNewLabel = new JLabel("제품코드");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		panel.add(lblNewLabel);
+		JLabel lblCode = new JLabel("제품코드");
+		lblCode.setHorizontalAlignment(SwingConstants.CENTER);
+		panel.add(lblCode);
 		
-		textField = new JTextField();
-		panel.add(textField);
-		textField.setColumns(10);
+		tfCode = new JTextField();
+		panel.add(tfCode);
+		tfCode.setColumns(10);
 		
-		JLabel lblNewLabel_1 = new JLabel("제품명");
-		panel.add(lblNewLabel_1);
+		JLabel lblName = new JLabel("제품명");
+		panel.add(lblName);
 		
-		textField_1 = new JTextField();
-		panel.add(textField_1);
-		textField_1.setColumns(10);
+		tfName = new JTextField();
+		panel.add(tfName);
+		tfName.setColumns(10);
 		
-		JLabel lblNewLabel_2 = new JLabel("제품단가");
-		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
-		panel.add(lblNewLabel_2);
+		JLabel lblPrice = new JLabel("제품단가");
+		lblPrice.setHorizontalAlignment(SwingConstants.CENTER);
+		panel.add(lblPrice);
 		
-		textField_2 = new JTextField();
-		panel.add(textField_2);
-		textField_2.setColumns(10);
+		tfPrice = new JTextField();
+		panel.add(tfPrice);
+		tfPrice.setColumns(10);
 		
 		JLabel lblNewLabel_3 = new JLabel("");
 		panel.add(lblNewLabel_3);
@@ -85,13 +83,13 @@ public class ProductUi extends JFrame {
 		JLabel lblNewLabel_4 = new JLabel("");
 		panel.add(lblNewLabel_4);
 		
-		JLabel label = new JLabel("판매수량");
-		label.setHorizontalAlignment(SwingConstants.CENTER);
-		panel.add(label);
+		JLabel lblSaleCnt = new JLabel("판매수량");
+		lblSaleCnt.setHorizontalAlignment(SwingConstants.CENTER);
+		panel.add(lblSaleCnt);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		panel.add(textField_3);
+		tfSaleCnt = new JTextField();
+		tfSaleCnt.setColumns(10);
+		panel.add(tfSaleCnt);
 		
 		JLabel label_1 = new JLabel("");
 		panel.add(label_1);
@@ -99,13 +97,13 @@ public class ProductUi extends JFrame {
 		JLabel label_2 = new JLabel("");
 		panel.add(label_2);
 		
-		JLabel label_3 = new JLabel("마진율");
-		label_3.setHorizontalAlignment(SwingConstants.CENTER);
-		panel.add(label_3);
+		JLabel lblMarginRate = new JLabel("마진율");
+		lblMarginRate.setHorizontalAlignment(SwingConstants.CENTER);
+		panel.add(lblMarginRate);
 		
-		textField_4 = new JTextField();
-		textField_4.setColumns(10);
-		panel.add(textField_4);
+		tfMarginRate = new JTextField();
+		tfMarginRate.setColumns(10);
+		panel.add(tfMarginRate);
 		
 		JLabel label_4 = new JLabel("");
 		panel.add(label_4);
@@ -116,14 +114,59 @@ public class ProductUi extends JFrame {
 		JPanel panel_2 = new JPanel();
 		contentPane.add(panel_2, BorderLayout.SOUTH);
 		
-		JButton btnNewButton = new JButton("입력");
-		panel_2.add(btnNewButton);
+		btnInput = new JButton("입력");
+		btnInput.addActionListener(this);
+		panel_2.add(btnInput);
 		
-		JButton btnNewButton_1 = new JButton("출력");
-		panel_2.add(btnNewButton_1);
+		btnOutput1 = new JButton("출력");
+		btnOutput1.addActionListener(this);
+		panel_2.add(btnOutput1);
 		
-		JButton btnNewButton_2 = new JButton("출력2");
-		panel_2.add(btnNewButton_2);
+		btnOutput2 = new JButton("출력2");
+		btnOutput2.addActionListener(this);
+		panel_2.add(btnOutput2);
 	}
 
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnInput) {
+			do_btnInput_actionPerformed(e);
+		}
+		if (e.getSource() == btnOutput2) {
+			do_btnOutput2_actionPerformed(e);
+		}
+		if (e.getSource() == btnOutput1) {
+			do_btnOutput1_actionPerformed(e);
+		}
+	}
+	protected void do_btnOutput1_actionPerformed(ActionEvent e) {
+		SalePriceTableUi ui = new SalePriceTableUi();
+		ui.setVisible(true);
+	}
+	protected void do_btnOutput2_actionPerformed(ActionEvent e) {
+		SalePriceTableUi ui = new SalePriceTableUi();
+		ui.setVisible(false);
+	}
+	protected void do_btnInput_actionPerformed(ActionEvent e) {
+		//입력된 데이터를 product로 받기 - 입력한 데이터 저장
+				Sale sale = getSale();
+				try {
+					service.registerSale(sale);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+				System.out.println("입력 된 값 추가");
+				try {
+					service.selectSaleByAll();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+	}
+	private Sale getSale() {
+		Product code = new Product(tfCode.getText().trim());
+		int price = Integer.parseInt(tfPrice.getText().trim());
+		int saleCnt = Integer.parseInt(tfSaleCnt.getText().trim());
+		int marginRate = Integer.parseInt(tfMarginRate.getText().trim());
+		
+		return new Sale(0 ,code , price, saleCnt, marginRate);
+	}
 }
